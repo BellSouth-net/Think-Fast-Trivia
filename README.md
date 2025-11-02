@@ -1,30 +1,27 @@
-Original App Design Project - README Template
-===
-
-# APP_NAME_HERE
+# Think Fast Trivia
 
 ## Table of Contents
 
 1. [Overview](#Overview)
 2. [Product Spec](#Product-Spec)
-3. [Wireframes](#Wireframes)
-4. [Schema](#Schema)
+3. [App Architecture](#App-Architecture)
+4. [Wireframes](#Wireframes)
+5. [Schema](#Schema)
 
 ## Overview
 
 ### Description
 
-[Provide a brief description of your app, its purpose, and functionality.]
+Think Fast Trivia is a dynamic iOS trivia game application that challenges users with timed quizzes across various categories. The app features an engaging UI with progress tracking, timed challenges, and detailed results.
 
 ### App Evaluation
 
-[Evaluation of your app across the following attributes]
-- **Category:** [e.g., Social, Entertainment, Education]
-- **Mobile:** [Is it a mobile application only?]
-- **Story:**  [What story does your app tell?]
-- **Market:** [Target audience for the app]
-- **Habit:** [Is it a daily use app or occasional use?]
-- **Scope:** [Is it a broad or narrow app in terms of features?]
+- **Category:** Education, Entertainment, Gaming
+- **Mobile:** iOS native application with SwiftUI
+- **Story:** Think Fast Trivia challenges users to test their knowledge under time pressure, creating an exciting and competitive experience while learning new facts.
+- **Market:** Trivia enthusiasts, casual gamers, educational institutions, and anyone looking to test their knowledge in an engaging format.
+- **Habit:** Regular usage encouraged through daily challenges, new question sets, and competitive leaderboards.
+- **Scope:** Focused on delivering a polished trivia experience with timed challenges, multiple categories, and performance tracking.
 
 ## Product Spec
 
@@ -32,69 +29,203 @@ Original App Design Project - README Template
 
 **Required Must-have Stories**
 
-* [User can [specific action, e.g., register an account]]
-* ...
+* User can select from various trivia categories
+* User can play time-limited trivia games
+* User can navigate between questions during gameplay
+* User can see their progress during a game session
+* User can view detailed results after completing a quiz
+* User can track time remaining with visual indicators
+* User can submit answers before the timer expires
 
 **Optional Nice-to-have Stories**
 
-* [User can [specific action, e.g., persist user information across working sessions]]
-* ...
+* User can create an account to save their progress
+* User can view leaderboards to compare scores with others
+* User can earn achievements for milestones
+* User can customize game difficulty
+* User can create custom trivia sets
+* User can challenge friends to beat their scores
+* User can access offline play mode
 
 ### 2. Screen Archetypes
 
-- [ ] [**Screen Name, e.g., Login Screen**]
-* [Required User Feature: User can log in.]
-- [ ] [**Another Screen Name**]
-* [Associated required user story]
-...
-...
-...
+- [x] **Home Screen**
+  * User can select trivia categories
+  * User can view game statistics
+  * User can access settings
+
+- [x] **Game Screen**
+  * User can view and answer trivia questions
+  * User can track remaining time
+  * User can navigate between questions
+  * User can submit final answers
+
+- [x] **Results Screen**
+  * User can view performance statistics
+  * User can see correct/incorrect answers
+  * User can share results
+  * User can restart or choose a new category
 
 ### 3. Navigation
 
-**Tab Navigation** (Tab to Screen)
-
-
-- [ ] [First Tab, e.g., Home Feed]
-- [ ] [Second Tab, e.g., Profile]
-...
-...
-...
-
 **Flow Navigation** (Screen to Screen)
 
-- [ ] [**Screen Name**]
-  * Leads to [**Next Screen**]
-- [ ] [**Another Screen Name**]
-  * Leads to [**Another Screen**] 
+- [x] **Home Screen**
+  * Leads to Category Selection
+  * Leads to Settings
 
+- [x] **Category Selection**
+  * Leads to Game Screen
+
+- [x] **Game Screen**
+  * Leads to Results Screen (upon completion or timeout)
+
+- [x] **Results Screen**
+  * Leads back to Home Screen
+  * Leads to New Game (same category)
+
+## App Architecture
+
+### Core Components
+
+1. **TriviaGameView**
+   * Main game interface that manages the trivia experience
+   * Handles timer functionality and question navigation
+   * Tracks user progress and answers
+
+2. **QuestionContentView**
+   * Displays individual trivia questions
+   * Manages answer selection and validation
+
+3. **ResultsView**
+   * Shows detailed performance statistics
+   * Displays correct answers and explanations
+
+### Key Features
+
+#### Timer System
+The app implements a dynamic timer system that allocates 30 seconds per question. The timer provides visual feedback with color changes as time runs low.
+
+```swift
+// Timer initialization
+let calculatedTime = questions.count * 30
+self.totalTime = calculatedTime
+_timeRemaining = State(initialValue: calculatedTime)
+```
+
+#### Question Navigation
+Users can freely navigate between questions during gameplay, with progress tracking and answer persistence.
+
+```swift
+// Navigation functions
+private func nextQuestion() {
+    if currentQuestionIndex < questions.count - 1 {
+        currentQuestionIndex += 1
+    }
+}
+
+private func previousQuestion() {
+    if currentQuestionIndex > 0 {
+        currentQuestionIndex -= 1
+    }
+}
+```
+
+#### Progress Tracking
+The app provides clear visual indicators of progress through the quiz.
+
+```swift
+// Progress indicators
+Text("Question \(currentQuestionIndex + 1) of \(questions.count)")
+Text("\(answeredCount)/\(questions.count) answered")
+ProgressView(value: Double(currentQuestionIndex + 1), total: Double(questions.count))
+```
 
 ## Wireframes
 
-[Add picture of your hand sketched wireframes in this section]
+### Main Game Screen
+The main game interface features:
+- Timer display with visual countdown
+- Question progress indicator
+- Question content with multiple-choice options
+- Navigation buttons for moving between questions
 
-### [BONUS] Digital Wireframes & Mockups
+### Results Screen
+After completing a quiz, users see:
+- Overall score and performance metrics
+- Breakdown of correct and incorrect answers
+- Time taken for completion
+- Options to retry or select a new category
 
-### [BONUS] Interactive Prototype
-
-## Schema 
-
+## Schema
 
 ### Models
 
-[Model Name, e.g., User]
-| Property | Type   | Description                                  |
-|----------|--------|----------------------------------------------|
-| username | String | unique id for the user post (default field)   |
-| password | String | user's password for login authentication      |
-| ...      | ...    | ...                          
+**TriviaResponse**
+| Property | Type | Description |
+|----------|------|-------------|
+| responseCode | Int | API response code (0 = success) |
+| results | [TriviaQuestion] | Array of trivia questions |
+| isSuccess | Bool | Whether the API request was successful |
+| errorMessage | String? | Human-readable error message based on response code |
 
+**TriviaQuestion**
+| Property | Type | Description |
+|----------|------|-------------|
+| id | UUID | Unique identifier for the question |
+| category | String | Question category |
+| type | String | Question type (multiple, boolean) |
+| difficulty | String | Question difficulty level |
+| question | String | The trivia question text (HTML encoded) |
+| correctAnswer | String | The correct answer (HTML encoded) |
+| incorrectAnswers | [String] | Array of incorrect answer options (HTML encoded) |
+| allAnswers | [String] | All answer options (shuffled) |
+| decodedQuestion | String | Decoded question text for display |
+| decodedCorrectAnswer | String | Decoded correct answer for display |
+| decodedAllAnswers | [String] | All decoded answers for display |
+
+**UserAnswer**
+| Property | Type | Description |
+|----------|------|-------------|
+| id | UUID | Unique identifier for the user answer |
+| question | TriviaQuestion | Reference to the question |
+| selectedAnswer | String? | User's selected answer (nil if unanswered) |
+| isCorrect | Bool? | Whether the selected answer is correct (nil if unanswered) |
+
+**TriviaCategory**
+| Case | API Value | Description |
+|------|-----------|-------------|
+| any | nil | Any category (no filter) |
+| generalKnowledge | "9" | General Knowledge questions |
+| books | "10" | Book-related questions |
+| film | "11" | Film-related questions |
+| music | "12" | Music-related questions |
+| *and 21 more categories* | ... | Various specialized topics |
+
+**TriviaDifficulty**
+| Case | API Value | Description |
+|------|-----------|-------------|
+| any | nil | Any difficulty level |
+| easy | "easy" | Easy difficulty questions |
+| medium | "medium" | Medium difficulty questions |
+| hard | "hard" | Hard difficulty questions |
+
+**TriviaQuestionType**
+| Case | API Value | Description |
+|------|-----------|-------------|
+| any | nil | Any question type |
+| multipleChoice | "multiple" | Multiple choice questions |
+| trueFalse | "boolean" | True/False questions |
 
 ### Networking
 
-- [List of network requests by screen]
-- [Example: `[GET] /users` - to retrieve user data]
-- ...
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+The app connects to the Open Trivia Database API to fetch questions:
+
+- `GET /api.php?amount=10&type=multiple` - Fetch 10 multiple-choice questions
+- `GET /api.php?amount=10&category=9&difficulty=medium` - Fetch medium difficulty questions from General Knowledge category
+
+API parameters:
+- `amount`: Number of questions to retrieve
+- `category`: Question category ID
+- `difficulty`: Question difficulty (easy, medium, hard)
+- `type`: Question type (multiple, boolean)
