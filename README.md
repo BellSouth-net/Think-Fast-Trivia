@@ -1,18 +1,20 @@
+Original App Design Project - README Template
+===
+
 # Think Fast Trivia
 
 ## Table of Contents
 
 1. [Overview](#Overview)
 2. [Product Spec](#Product-Spec)
-3. [App Architecture](#App-Architecture)
-4. [Wireframes](#Wireframes)
-5. [Schema](#Schema)
+3. [Wireframes](#Wireframes)
+4. [Schema](#Schema)
 
 ## Overview
 
 ### Description
 
-Think Fast Trivia is a dynamic iOS trivia game application that challenges users with timed quizzes across various categories. The app features an engaging UI with progress tracking, timed challenges, and detailed results.
+Think Fast Trivia is a iOS trivia game that challenges users with timed quizzes across various categories. The app features an engaging UI with progress tracking, timed challenges, and detailed results.
 
 ### App Evaluation
 
@@ -66,6 +68,7 @@ Think Fast Trivia is a dynamic iOS trivia game application that challenges users
   * User can share results
   * User can restart or choose a new category
 
+
 ### 3. Navigation
 
 **Flow Navigation** (Screen to Screen)
@@ -84,82 +87,12 @@ Think Fast Trivia is a dynamic iOS trivia game application that challenges users
   * Leads back to Home Screen
   * Leads to New Game (same category)
 
-## App Architecture
-
-### Core Components
-
-1. **TriviaGameView**
-   * Main game interface that manages the trivia experience
-   * Handles timer functionality and question navigation
-   * Tracks user progress and answers
-
-2. **QuestionContentView**
-   * Displays individual trivia questions
-   * Manages answer selection and validation
-
-3. **ResultsView**
-   * Shows detailed performance statistics
-   * Displays correct answers and explanations
-
-### Key Features
-
-#### Timer System
-The app implements a dynamic timer system that allocates 30 seconds per question. The timer provides visual feedback with color changes as time runs low.
-
-```swift
-// Timer initialization
-let calculatedTime = questions.count * 30
-self.totalTime = calculatedTime
-_timeRemaining = State(initialValue: calculatedTime)
-```
-
-#### Question Navigation
-Users can freely navigate between questions during gameplay, with progress tracking and answer persistence.
-
-```swift
-// Navigation functions
-private func nextQuestion() {
-    if currentQuestionIndex < questions.count - 1 {
-        currentQuestionIndex += 1
-    }
-}
-
-private func previousQuestion() {
-    if currentQuestionIndex > 0 {
-        currentQuestionIndex -= 1
-    }
-}
-```
-
-#### Progress Tracking
-The app provides clear visual indicators of progress through the quiz.
-
-```swift
-// Progress indicators
-Text("Question \(currentQuestionIndex + 1) of \(questions.count)")
-Text("\(answeredCount)/\(questions.count) answered")
-ProgressView(value: Double(currentQuestionIndex + 1), total: Double(questions.count))
-```
 
 ## Wireframes
+![Add picture of your hand sketched wireframes in this section](https://imgur.com/HTS0Vb6.png)
 
-### Main Game Screen
-The main game interface features:
-- Timer display with visual countdown
-- Question progress indicator
-- Question content with multiple-choice options
-- Navigation buttons for moving between questions
 
-### Results Screen
-After completing a quiz, users see:
-- Overall score and performance metrics
-- Breakdown of correct and incorrect answers
-- Time taken for completion
-- Options to retry or select a new category
-
-## Schema
-
-### Models
+### Models/Schema
 
 **TriviaResponse**
 | Property | Type | Description |
@@ -217,15 +150,10 @@ After completing a quiz, users see:
 | multipleChoice | "multiple" | Multiple choice questions |
 | trueFalse | "boolean" | True/False questions |
 
+
 ### Networking
 
 The app connects to the Open Trivia Database API to fetch questions:
 
 - `GET /api.php?amount=10&type=multiple` - Fetch 10 multiple-choice questions
 - `GET /api.php?amount=10&category=9&difficulty=medium` - Fetch medium difficulty questions from General Knowledge category
-
-API parameters:
-- `amount`: Number of questions to retrieve
-- `category`: Question category ID
-- `difficulty`: Question difficulty (easy, medium, hard)
-- `type`: Question type (multiple, boolean)
