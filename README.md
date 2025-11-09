@@ -89,7 +89,7 @@ Think Fast Trivia is a iOS trivia game that challenges users with timed quizzes 
 
 
 ## Wireframes
-![Add picture of your hand sketched wireframes in this section](https://imgur.com/a/ywYZJo3.png)
+![Add picture of your hand sketched wireframes in this section](https://imgur.com/a/ywYZJo3.PNG)
 
 ## Implementation Status
 ### Project Structure:
