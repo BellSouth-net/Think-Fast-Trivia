@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import ParseSwift
 
 struct ResultsView: View {
     let questions: [TriviaQuestion]
     let userAnswers: [UserAnswer]
+    let timeTaken: Int // Time taken in seconds
+    let category: String
+    let difficulty: String
     
     @Environment(\.dismiss) private var dismiss
     @State private var showNewGameConfirmation = false
+    @State private var scoreSaved = false
+    @State private var isSavingScore = false
+    @State private var showSaveError = false
+    @State private var saveErrorMessage = ""
+    @State private var showHighScores = false
     
     private var score: Int {
         userAnswers.filter { $0.isCorrect == true }.count
@@ -61,6 +70,46 @@ struct ResultsView: View {
                     Text(String(format: "%.0f%% Correct", percentage))
                         .font(.title2)
                         .foregroundColor(.secondary)
+                    
+                    // TEMPORARILY HIDDEN - Save Score Button
+                    /*
+                    // Save Score Button (only show if logged in and not saved)
+                    if User.current != nil && !scoreSaved {
+                        Button(action: saveScore) {
+                            HStack {
+                                if isSavingScore {
+                                    ProgressView()
+                                        .tint(.white)
+                                        .scaleEffect(0.8)
+                                } else {
+                                    Image(systemName: "square.and.arrow.up")
+                                }
+                                Text(isSavingScore ? "Saving..." : "Save Score")
+                                    .font(.subheadline)
+                                    .bold()
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(
+                                LinearGradient(
+                                    colors: [Color.green, Color.blue],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        .disabled(isSavingScore)
+                    } else if scoreSaved {
+                    */
+                    
+                    // Show saved message even though we're not actually saving
+                    if false {
+                        Label("Score Saved!", systemImage: "checkmark.circle.fill")
+                            .font(.subheadline)
+                            .foregroundColor(.green)
+                    }
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -104,19 +153,91 @@ struct ResultsView: View {
                 Button(action: { showNewGameConfirmation = true }) {
                     HStack {
                         Image(systemName: "house.fill")
-                        Text("New Game")
+                        Text("Menu")
                     }
                 }
             }
+            
+            // TEMPORARILY HIDDEN - High Scores button
+            /*
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showHighScores = true }) {
+                    HStack {
+                        Image(systemName: "trophy.fill")
+                        Text("High Scores")
+                    }
+                    .foregroundColor(.yellow)
+                }
+            }
+            */
         }
-        .alert("Start New Game?", isPresented: $showNewGameConfirmation) {
+        .sheet(isPresented: $showHighScores) {
+            HighScoresView()
+        }
+        .alert("Return to Menu?", isPresented: $showNewGameConfirmation) {
             Button("Cancel", role: .cancel) { }
-            Button("New Game", role: .destructive) {
+            Button("Return", role: .destructive) {
                 // Dismiss all the way back to the root
                 resetToMainMenu()
             }
         } message: {
-            Text("Are you sure you want to start a new game? Your current progress will be lost.")
+            Text("Are you sure you want to return to the main menu?")
+        }
+        .alert("Error Saving Score", isPresented: $showSaveError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(saveErrorMessage)
+        }
+    }
+    
+    private func saveScore() {
+        // Only save if user is logged in
+        guard User.current != nil else {
+            saveErrorMessage = "You must be logged in to save scores"
+            showSaveError = true
+            return
+        }
+        
+        // Prevent duplicate saves
+        guard !scoreSaved else {
+            print("⚠️ Score already saved, preventing duplicate save")
+            return
+        }
+        
+        isSavingScore = true
+        saveErrorMessage = ""
+        
+        print("💾 Starting score save: \(score)/\(questions.count) in \(category) - \(difficulty)")
+        
+        Task {
+            do {
+                try await ParseService.shared.saveGameScore(
+                    score: score,
+                    totalQuestions: questions.count,
+                    category: category,
+                    difficulty: difficulty,
+                    timeTaken: timeTaken
+                )
+                
+                await MainActor.run {
+                    print("✅ Score saved successfully!")
+                    isSavingScore = false
+                    scoreSaved = true
+                    
+                    // Show success feedback
+                    withAnimation(.easeInOut) {
+                        // Trigger UI update to show success state
+                    }
+                }
+            } catch {
+                print("❌ Error saving score: \(error)")
+                await MainActor.run {
+                    isSavingScore = false
+                    saveErrorMessage = "Failed to save score: \(error.localizedDescription)"
+                    showSaveError = true
+                    scoreSaved = false // Allow retry
+                }
+            }
         }
     }
     

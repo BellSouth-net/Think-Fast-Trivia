@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 // MARK: - API Response
 struct TriviaResponse: Codable {
@@ -206,18 +205,33 @@ enum TriviaQuestionType: String, CaseIterable, Identifiable {
 // MARK: - HTML Decoding Extension
 extension String {
     var htmlDecoded: String {
-        guard let data = self.data(using: .utf8) else { return self }
+        var result = self
         
-        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-            .documentType: NSAttributedString.DocumentType.html,
-            .characterEncoding: String.Encoding.utf8.rawValue
+        // Common HTML entities
+        let entities = [
+            ("&quot;", "\""),
+            ("&amp;", "&"),
+            ("&apos;", "'"),
+            ("&lt;", "<"),
+            ("&gt;", ">"),
+            ("&#039;", "'"),
+            ("&rsquo;", "'"),
+            ("&lsquo;", "'"),
+            ("&rdquo;", "\""),
+            ("&ldquo;", "\""),
+            ("&nbsp;", " "),
+            ("&eacute;", "é"),
+            ("&ntilde;", "ñ"),
+            ("&ouml;", "ö"),
+            ("&uuml;", "ü"),
+            ("&auml;", "ä")
         ]
         
-        guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else {
-            return self
+        for (entity, replacement) in entities {
+            result = result.replacingOccurrences(of: entity, with: replacement)
         }
         
-        return attributedString.string
+        return result
     }
 }
 

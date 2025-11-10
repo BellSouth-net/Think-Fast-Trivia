@@ -169,7 +169,11 @@ struct OptionsView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToGame) {
-                TriviaGameView(questions: questions)
+                TriviaGameView(
+                    questions: questions,
+                    category: selectedCategory.rawValue,
+                    difficulty: selectedDifficulty.rawValue
+                )
             }
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) { }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TriviaGameView: View {
     let questions: [TriviaQuestion]
+    let category: String
+    let difficulty: String
     
     @State private var userAnswers: [UserAnswer]
     @State private var currentQuestionIndex = 0
@@ -20,8 +22,10 @@ struct TriviaGameView: View {
     
     private let totalTime: Int
     
-    init(questions: [TriviaQuestion]) {
+    init(questions: [TriviaQuestion], category: String = "Any", difficulty: String = "Any") {
         self.questions = questions
+        self.category = category
+        self.difficulty = difficulty
         _userAnswers = State(initialValue: questions.map { UserAnswer(question: $0, selectedAnswer: nil) })
         
         // 30 seconds per question
@@ -138,7 +142,13 @@ struct TriviaGameView: View {
         .onAppear(perform: startTimer)
         .onDisappear(perform: stopTimer)
         .navigationDestination(isPresented: $showResults) {
-            ResultsView(questions: questions, userAnswers: userAnswers)
+            ResultsView(
+                questions: questions,
+                userAnswers: userAnswers,
+                timeTaken: totalTime - timeRemaining,
+                category: category,
+                difficulty: difficulty
+            )
         }
         .alert("Submit Answers?", isPresented: $showSubmitConfirmation) {
             Button("Cancel", role: .cancel) { }
@@ -163,9 +173,7 @@ struct TriviaGameView: View {
     }
     
     private var timeString: String {
-        let minutes = timeRemaining / 60
-        let seconds = timeRemaining % 60
-        return String(format: "%02d:%02d", minutes, seconds)
+        return FormatUtils.formatTime(seconds: timeRemaining)
     }
     
     private var answeredCount: Int {
