@@ -31,13 +31,13 @@ Think Fast Trivia is a iOS trivia game that challenges users with timed quizzes 
 
 **Required Must-have Stories**
 
-[x] User can select from various trivia categories
-[x] User can play time-limited trivia games
-[ ] User can navigate between questions during gameplay
-[ ] User can see their progress during a game session
-[ ] User can view detailed results after completing a quiz
-[x] User can track time remaining with visual indicators
-[ ] User can submit answers before the timer expires
+- [x] User can select from various trivia categories
+- [x] User can play time-limited trivia games
+- [ ] User can navigate between questions during gameplay
+- [ ] User can see their progress during a game session
+- [ ] User can view detailed results after completing a quiz
+- [x] User can track time remaining with visual indicators
+- [ ] User can submit answers before the timer expires
 
 **Optional Nice-to-have Stories**
 
