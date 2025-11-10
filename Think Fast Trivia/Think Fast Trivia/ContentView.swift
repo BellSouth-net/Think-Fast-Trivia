@@ -6,10 +6,32 @@
 //
 
 import SwiftUI
+import ParseSwift
 
 struct ContentView: View {
+    @State private var isLoggedIn = ParseService.shared.isLoggedIn
+    
     var body: some View {
-        OptionsView()
+        ZStack {
+            Group {
+                if isLoggedIn {
+                    MenuView()
+                } else {
+                    LoginView()
+                }
+            }
+            .onAppear {
+                // Check login status on appear
+                isLoggedIn = ParseService.shared.isLoggedIn
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("UserLoginStatusChanged"))) { _ in
+                // Update login status when it changes
+                isLoggedIn = ParseService.shared.isLoggedIn
+            }
+            
+            // Global AI Model download progress overlay
+            GlobalAIModelProgress()
+        }
     }
 }
 
