@@ -57,13 +57,13 @@ Think Fast Trivia is an iOS trivia game that challenges users with timed quizzes
 
 **Optional Nice-to-have Stories**
 
-[x] User can create an account to save their progress
-[ ] User can view leaderboards to compare scores with others
-[ ] User can earn achievements for milestones
-[ ] User can customize game difficulty
-[ ] User can create custom trivia sets
-[ ]User can challenge friends to beat their scores
-[x]User can access offline play mode
+- [x] User can create an account to save their progress
+- [ ] User can view leaderboards to compare scores with others
+- [ ] User can earn achievements for milestones
+- [x] User can customize game difficulty
+- [ ] User can create custom trivia sets
+- [ ]User can challenge friends to beat their scores
+- [x]User can access offline play mode
 
 ### 2. Screen Archetypes
 
@@ -72,13 +72,13 @@ Think Fast Trivia is an iOS trivia game that challenges users with timed quizzes
   * User can view game statistics
   * User can access settings
 
-- [ ] **Game Screen**
+- [x] **Game Screen**
   * User can view and answer trivia questions
   * User can track remaining time
   * User can navigate between questions
   * User can submit final answers
 
-- [ ] **Results Screen**
+- [x] **Results Screen**
   * User can view performance statistics
   * User can see correct/incorrect answers
   * User can share results
@@ -96,10 +96,10 @@ Think Fast Trivia is an iOS trivia game that challenges users with timed quizzes
 - [x] **Category Selection**
   * Leads to Game Screen
 
-- [ ] **Game Screen**
+- [x] **Game Screen**
   * Leads to Results Screen (upon completion or timeout)
 
-- [ ] **Results Screen**
+- [x] **Results Screen**
   * Leads back to Home Screen
   * Leads to New Game (same category)
      
