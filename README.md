@@ -12,9 +12,25 @@ Original App Design Project - README Template
 
 ## Overview
 
-### Description
+# Think Fast Trivia
 
-Think Fast Trivia is a iOS trivia game that challenges users with timed quizzes across various categories. The app features an engaging UI with progress tracking, timed challenges, and detailed results.
+![Think Fast Trivia Demo](Think_Fast_Trivia.gif)
+
+## Description
+
+Think Fast Trivia is an iOS trivia game that challenges users with timed quizzes across various categories. The app features an engaging UI with progress tracking, timed challenges, and detailed results.
+
+### App Preview
+
+![Think Fast Trivia Gameplay](https://github.com/user-attachments/assets/905c7177-e457-4476-830d-17f8abda3688)
+
+## Demo
+
+### Video Walkthrough
+
+[![Think Fast Trivia Demo Video](https://img.youtube.com/vi/rKH0egnM4ig/maxresdefault.jpg)](https://www.youtube.com/watch?v=rKH0egnM4ig)
+
+*Click the image above to watch the full demonstration video*
 
 ### App Evaluation
 
